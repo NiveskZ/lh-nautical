@@ -278,3 +278,4 @@ custos_flat
 # %%
 
 custos_flat.to_csv('../data/processed/custos_clean.csv', index=False)
+# %%
