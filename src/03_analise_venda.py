@@ -44,6 +44,6 @@ ax_bot.set_xlabel('Lucro Bruto (USD)')
 
 fig.suptitle('Ranking de Lucratividade por Produto', fontsize=13, fontweight='bold', y=1.01)
 plt.tight_layout()
-plt.savefig('../data/outputs/ranking_lucratividade.png', dpi=150)
+plt.savefig('../data/outputs/imgs/ranking_lucratividade.png', dpi=150)
 plt.show()
 # %%
