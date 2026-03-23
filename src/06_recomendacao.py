@@ -19,10 +19,16 @@ compras = pd.read_sql(
 
 compras
 # %% [markdown]
-# ## Abordagem: Co-ocorrência de compras por cliente
-# Com 49 clientes únicos, a filtragem colaborativa item-item baseada em
-# co-ocorrência é a escolha mais interessantet, pois não depende de muitos usuários.
-
+# ## Sistema de Recomendação - Co-ocorrência
+#
+# Com apenas 49 clientes, algoritmos colaborativos baseados em usuário
+# (user-based) seriam instáveis. A abordagem escolhida é item-item:
+# 
+# - recomenda produtos que outros clientes compraram junto com os produtos
+# do cliente em questão.
+#
+# A "força" da recomendação é a contagem de clientes que compraram
+# os dois produtos. Quanto maior, mais confiável a sugestão.
 # %%
 # Separando por id todos os produtos comprados por cliente
 por_cliente = (
@@ -63,25 +69,31 @@ def recomendar(id_cliente, n=5):
 
     candidatos = co_oc[mask].copy()
     # Seleciona candidatos de recomendação
-    candidatos['recomendado'] = candidatos.apply(
+    candidatos['id_produto_recomendado'] = candidatos.apply(
         lambda r: r['produto_b'] if r['produto_a'] in produtos_do_cliente
                   else r['produto_a'],
         axis=1
     )
     # Remove o que o cliente já comprou
-    candidatos = candidatos[~candidatos['recomendado'].isin(produtos_do_cliente)]
+    candidatos = candidatos[~candidatos['id_produto_recomendado'].isin(produtos_do_cliente)]
 
     top = (
         candidatos
-        .groupby('recomendado')['contagem']
+        .groupby('id_produto_recomendado')['contagem']
+        .sum()
         .nlargest(n)
         .reset_index()
     )
 
     return top.merge(
         compras[['id_produto', 'nome_produto', 'categoria']].drop_duplicates(),
-        left_on='recomendado', right_on='id_produto'
-    )
+        left_on='id_produto_recomendado', right_on='id_produto'
+    )[['id_produto_recomendado', 'contagem', 'nome_produto', 'categoria']]
 
+# %% [markdown]
+# ### Validação
+# Testando a função para o cliente 10:
+# esperamos produtos de categorias variadas, priorizando os mais
+# frequentemente comprados em conjunto com o histórico desse cliente.
 recomendar(10)
 # %%
