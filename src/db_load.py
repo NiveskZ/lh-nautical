@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import text
-from src.db import get_engine
+from db import get_engine
 
 def recriar_schema(engine):
     schema = open('sql/schema/01_create_tables.sql').read()

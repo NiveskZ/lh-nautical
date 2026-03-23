@@ -1,10 +1,13 @@
-# %%
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.standard.operators.bash import BashOperator
 from datetime import datetime, timedelta
+from dotenv import dotenv_values
+import os
 import subprocess, sys
-# %%
+
+PROJECT_ROOT = os.path.expanduser('~/Documentos/lh_nauticals')
+config = dotenv_values(f'{PROJECT_ROOT}/.env')
 
 default_args = {
     'owner': 'dados',
@@ -13,10 +16,14 @@ default_args = {
 }
 
 def etapa_limpeza():
-    subprocess.run([sys.executable, '../src/02_tratamento.py'], check=True)
+    subprocess.run([sys.executable, f'{PROJECT_ROOT}/src/02_tratamento.py'],
+                    cwd=f'{PROJECT_ROOT}/src',
+                    check=True)
 
 def etapa_carga():
-    subprocess.run([sys.executable, '../src/db_load.py'], check=True)
+    subprocess.run([sys.executable, f'{PROJECT_ROOT}/src/db_load.py'],
+                    cwd=PROJECT_ROOT,
+                    check=True)
 
 with DAG(dag_id='lh_nautical_pipeline',
     default_args=default_args,
@@ -30,7 +37,11 @@ with DAG(dag_id='lh_nautical_pipeline',
     carga = PythonOperator(task_id='carga_postgres', python_callable=etapa_carga)
     views = BashOperator(
         task_id='refresh_views',
-        bash_command='psql $DB_URL -f sql/views/vw_vendas.sql'
+        bash_command=(
+            f"psql postgresql://{config['DB_USER']}:{config['DB_PASSWORD']}"
+            f"@{config['DB_HOST']}:{config['DB_PORT']}/{config['DB_NAME']} "
+            f"-f {PROJECT_ROOT}/sql/views/vw_vendas.sql"
+        )
     )
 
     limpeza >> carga >> views
