@@ -9,7 +9,6 @@ dependencies:
   - bzip2=1.0.8
   - ca-certificates=2026.2.25
   - comm=0.2.3
-  - cpython=3.14.3
   - debugpy=1.8.20
   - decorator=5.2.1
   - executing=2.2.1
@@ -49,10 +48,8 @@ dependencies:
   - ptyprocess=0.7.0
   - pure_eval=0.2.3
   - pygments=2.19.2
-  - python=3.14.3
+  - python=3.13
   - python-dateutil=2.9.0.post0
-  - python-gil=3.14.3
-  - python_abi=3.14
   - pyzmq=27.1.0
   - readline=8.3
   - six=1.17.0

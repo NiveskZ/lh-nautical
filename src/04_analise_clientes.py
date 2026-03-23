@@ -11,6 +11,7 @@ vendas = pd.read_sql(
     engine,
     parse_dates=['data_venda']
 )
+vendas
 # %% [markdown]
 # ## RFM — Recência, Frequência, Monetário
 # Com 49 clientes e ~200 compras por cliente em média, esses clientes se comportam
