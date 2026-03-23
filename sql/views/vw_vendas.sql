@@ -16,7 +16,7 @@ SELECT
 	dc.nome_completo AS nome_cliente,
 	dc.estado,
 	fv.qtd,
-	fv.valor_total_usd,
+	fv.valor_total,
 	c.custo_usd AS custo_unitario_usd,
 	c.custo_usd * fv.qtd AS custo_total_usd,
 	fv.valor_total - (c.custo_usd * fv.qtd) AS lucro_bruto_usd,

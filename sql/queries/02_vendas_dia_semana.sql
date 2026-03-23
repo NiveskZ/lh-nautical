@@ -29,7 +29,7 @@ SELECT
 	COUNT(v.data_venda) AS qtd_dias_com_venda,
 	COUNT(d.data) - COUNT(v.data_venda) AS qtd_dias_sem_venda,
 	ROUND(coalesce(SUM(v.faturamento),0),2) AS faturamento_total,
-	ROUND(coalesce(SUM(v.faturamento),0)/COUNT(d.data),2) AS media_faturamento_dia
+	ROUND(coalesce(SUM(v.faturamento),0)/COUNT(d.data),2) AS media_faturamento_dia,
 	ROUND(COALESCE(AVG(v.faturamento),0),2) AS media_faturamento_dia_ativo
 FROM dias_com_info d
 LEFT JOIN vendas_diarias v
